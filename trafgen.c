@@ -317,7 +317,6 @@ static void apply_counter(int id)
 		struct counter *counter = &packet_dyn[id].cnt[j];
 
 		val = counter->val - counter->min;
-		printf("VAL=%d\n", val);
 		switch (counter->type) {
 		case TYPE_INC:
 			val = (val + counter->inc) % (counter->max - counter->min + 1);

@@ -103,15 +103,15 @@ static inline void __init_new_csum_slot(struct packet_dyn *slot)
 	slot->slen = 0;
 }
 
-static inline void __setup_new_counter(struct counter *c, uint8_t start,
-				       uint8_t stop, uint8_t stepping,
+static inline void __setup_new_counter(struct counter *c, uint16_t start,
+				       uint16_t stop, uint16_t stepping,
 				       int type)
 {
 	c->min = start;
 	c->max = stop;
 	c->inc = stepping;
 	c->val = (type == TYPE_INC) ? start : stop;
-	c->off = payload_last;
+	c->off = payload_last - 1;
 	c->type = type;
 }
 
@@ -316,7 +316,7 @@ static void set_dynamic_rnd(void)
 	__setup_new_randomizer(&pktd->rnd[packetdr_last]);
 }
 
-static void set_dynamic_incdec(uint8_t start, uint8_t stop, uint8_t stepping,
+static void set_dynamic_incdec(uint16_t start, uint16_t stop, uint16_t stepping,
 			       int type)
 {
 	struct packet *pkt = &packets[packet_last];
@@ -325,7 +325,7 @@ static void set_dynamic_incdec(uint8_t start, uint8_t stop, uint8_t stepping,
 	if (test_ignore())
 		return;
 
-	pkt->len++;
+	pkt->len+=2;
 	pkt->payload = xrealloc(pkt->payload, pkt->len);
 
 	pktd->clen++;

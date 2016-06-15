@@ -312,11 +312,12 @@ static void apply_counter(int id)
 	size_t j, counter_max = packet_dyn[id].clen;
 
 	for (j = 0; j < counter_max; ++j) {
-		uint8_t val;
+		uint16_t val;
+		uint16_t _val;
 		struct counter *counter = &packet_dyn[id].cnt[j];
 
 		val = counter->val - counter->min;
-
+		printf("VAL=%d\n", val);
 		switch (counter->type) {
 		case TYPE_INC:
 			val = (val + counter->inc) % (counter->max - counter->min + 1);
@@ -328,8 +329,9 @@ static void apply_counter(int id)
 			bug();
 		}
 
+		_val = cpu_to_be16(val);
 		counter->val = val + counter->min;
-		packets[id].payload[counter->off] = val;
+		fmemcpy(&packets[id].payload[counter->off], &_val, sizeof(_val));
 	}
 }
 

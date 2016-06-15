@@ -312,8 +312,8 @@ static void apply_counter(int id)
 	size_t j, counter_max = packet_dyn[id].clen;
 
 	for (j = 0; j < counter_max; ++j) {
-		uint16_t val;
-		uint16_t _val;
+		uint32_t val;
+		uint32_t _val;
 		struct counter *counter = &packet_dyn[id].cnt[j];
 
 		val = counter->val - counter->min;
@@ -329,7 +329,7 @@ static void apply_counter(int id)
 			bug();
 		}
 
-		_val = cpu_to_be16(val);
+		_val = cpu_to_be32(val);
 		counter->val = val + counter->min;
 		fmemcpy(&packets[id].payload[counter->off], &_val, sizeof(_val));
 	}
